@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import Time from './Time';
 
 const Container = styled.div`
     background: transparent;
@@ -29,17 +30,6 @@ const TimesWrapper = styled.div`
     justify-content: space-evenly;
     gap: 20px;
 `;
-const Time = styled.div`
-    height: 150px;
-    width: 150px;
-    background-color: #2c2c44;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    color: #d4506f;
-    font-size: 72px;
-    font-weight: bold;
-`;
 const TimeTextWrapper = styled.div`
     display: flex;
     align-items: center;
@@ -52,7 +42,7 @@ const TimeText = styled.span`
     letter-spacing: 2px;
     width: 150px;
     text-align: center;
-`; 
+`;
 
 const Timer = () => {
     return (
@@ -61,18 +51,18 @@ const Timer = () => {
                 We're launching soon
             </Title>
             <Clock>
-               <TimesWrapper>
-                   <Time>08</Time>
-                   <Time>23</Time>
-                   <Time>55</Time>
-                   <Time>41</Time>
-               </TimesWrapper>
-               <TimeTextWrapper>
-                   <TimeText>Days</TimeText>
-                   <TimeText>Hours</TimeText>
-                   <TimeText>Minutes</TimeText>
-                   <TimeText>Seconds</TimeText>
-               </TimeTextWrapper>
+                <TimesWrapper>
+                    <Time text='08' />
+                    <Time text='23' />
+                    <Time text='55' />
+                    <Time text='41' />
+                </TimesWrapper>
+                <TimeTextWrapper>
+                    <TimeText>Days</TimeText>
+                    <TimeText>Hours</TimeText>
+                    <TimeText>Minutes</TimeText>
+                    <TimeText>Seconds</TimeText>
+                </TimeTextWrapper>
             </Clock>
         </Container>
     )
