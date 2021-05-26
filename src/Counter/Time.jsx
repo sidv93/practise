@@ -1,109 +1,170 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
 const Container = styled(motion.div)`
     height: 150px;
     width: 150px;
-    background-color: transparent;
+    background-color: #2c2c44;
     border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
     position: relative;
-    overflow: hidden;
+    perspective: 300px;
 
-    .top-section {
+    &:before {
+        content: '';
         position: absolute;
-        background-color: #2c2c44;
-        backface-visibility: visible;
-        transform-style: preserve-3d;
-        perspective: 600px;
-        height: 50%;
-        width: 100%;
-        top: 0;
-        left: 0;
-    }
-
-    .bottom-section {
-        position: absolute;
-        background-color: #2c2c44;
-        height: 50%;
-        width: 100%;
-        bottom: 0;
-        left: 0;
-    }
-
-    .text {
-        color: #d4506f;
-        font-size: 72px;
-        font-weight: bold;
-        position: absolute;
-        top: 30px;
-        left: 30px;
+        top: 47%;
+        left: -6px;
+        background-color: black;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
         z-index: 2;
     }
 
     &:after {
         content: '';
         position: absolute;
-        top: 50%;
-        left: 0;
-        height: 1px;
+        top: 47%;
+        right: -6px;
+        background-color: black;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        z-index: 2;
+    }
+
+    .uppercard, .lowercard {
+        display: flex;
+        position: relative;
+        justify-content: center;
         width: 100%;
-        background-color: black;
-        opacity: 0.5;
+        height: 50%;
+        overflow: hidden;
+        border: 1px solid black;
+
+        span {
+            color: #d4506f;
+            font-size: 72px;
+            font-weight: bold;
+        }
     }
 
-    .seperator-left {
-        position: absolute;
-        left: -8px;
-        top: 67px;
-        height: 16px;
-        width: 16px;
-        border-radius: 50%;
-        background-color: black;
+    .uppercard {
+        align-items: flex-end;
+        border-bottom: 0.5px solid black;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+
+        span {
+            transform: translateY(50%);
+        }
     }
 
-    .seperator-right {
+    .lowercard {
+        align-items: flex-start;
+        border-bottom: 0.5px solid black;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+
+        span {
+            transform: translateY(-50%);
+        }
+    }
+
+    .flipcard {
+        display: flex;
+        justify-content: center;
         position: absolute;
-        right: -8px;
-        top: 67px;
-        height: 16px;
-        width: 16px;
-        border-radius: 50%;
-        background-color: black;
+        left: 0;
+        width: 100%;
+        height: 50%;
+        overflow: hidden;
+        backface-visibility: hidden;
+
+        span {
+            color: #d4506f;
+            font-size: 72px;
+            font-weight: bold;
+        }
+
+        &.unfold {
+            top: 50%;
+            align-items: flex-start;
+            transform-origin: 50% 0%;
+            transform: rotateX(180deg); // from 180 to 0
+            background-color: #2c2c44;
+            border-bottom-left-radius: 3px;
+            border-bottom-right-radius: 3px;
+            border: 0.5px solid black;
+            border-top: 0.5px solid black;
+            transform-style: preserve-3d;
+            animation: unfold 0.6s ease-in;
+
+            @keyframes unfold {
+                0% {
+                    transform: rotateX(180deg);
+                }
+                100% {
+                    transform: rotateX(0deg);
+                }
+            }
+		
+            span {
+                transform: translateY(-50%);
+            }
+        }
+
+        &.fold {
+            top: 0%;
+            align-items: flex-end;
+            transform-origin: 50% 100%;
+            transform: rotateX(0deg); // from 0 to -180
+            background-color: #2c2c44;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+            border: 0.5px solid black;
+            border-bottom: 0.5px solid black;
+            transform-style: preserve-3d;
+            animation: fold 0.6s ease-in;
+
+            @keyframes fold {
+                0% {
+                    transform: rotateX(0);
+                }
+                100% {
+                    transform: rotateX(-180deg);
+                }
+            }
+		
+            span {
+                transform: translateY(50%);
+            }
+        }	
     }
 `;
 
 const Time = ({ text }) => {
+    const [animation1, setAnimation1] = useState('fold');
+    const [animation2, setAnimation2] = useState('unfold');
+    useEffect(() => {
+        setAnimation1((ani) => ani === 'fold' ? 'unfold' : 'fold');
+        setAnimation2((ani) => ani === 'fold' ? 'unfold' : 'fold');
+    }, [text]);
     return (
-        <Container
-            animate={{
-                // rotateX: [0, 180]
-            }}
-        >
-            <span className='text'>{text}</span>
-            <motion.div
-                perspective={400}
-                className='top-section'
-                // initial={{
-                //     rotateX: 90,
-                //     transformOrigin: '50% 0%',
-                // }}
-                animate={{
-                    rotateX: -180,
-                    // scale: [1,2,1],
-                    perspective: [400, 1600, 400],
-                    // perspectiveOrigin: '50% 50%',
-                    transformOrigin: 'bottom center'
-                }}
-                transition={{duration: 2}}
-            />
-            <span className='text'>{text}</span>
-            <div className='bottom-section' />
-            <span className='seperator-left' />
-            <span className='seperator-right' />
+        <Container>
+            <div className="uppercard">
+                <span>{text}</span>
+            </div>
+            <div className="lowercard">
+                <span>{text}</span>
+            </div>
+            <div className={`flipcard ${animation1}`}>
+                <span>{text}</span>
+            </div>
+            <div className={`flipcard ${animation2}`}>
+                <span>{text}</span>
+            </div>
         </Container>
     )
 }

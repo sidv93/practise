@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Time from './Time';
 
@@ -45,6 +45,20 @@ const TimeText = styled.span`
 `;
 
 const Timer = () => {
+    const [days, setDays] = useState(8);
+    const [hours, setHours] = useState(23);
+    const [minutes, setMinutes] = useState(55);
+    const [seconds, setSeconds] = useState(5);
+    
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setSeconds((sec) => (sec === 0 ? 60 : sec - 1));
+            if (seconds === 0) {
+                setMinutes((min) => (min === 0 ? 60 : min - 1))
+            }
+        }, 1000);
+        return () => clearInterval(interval);
+    }, [days, hours, minutes, seconds]);
     return (
         <Container>
             <Title>
@@ -52,10 +66,10 @@ const Timer = () => {
             </Title>
             <Clock>
                 <TimesWrapper>
-                    <Time text='08' />
-                    <Time text='23' />
-                    <Time text='55' />
-                    <Time text='41' />
+                    <Time text={days} />
+                    <Time text={hours} />
+                    <Time text={minutes} />
+                    <Time text={seconds} />
                 </TimesWrapper>
                 <TimeTextWrapper>
                     <TimeText>Days</TimeText>
